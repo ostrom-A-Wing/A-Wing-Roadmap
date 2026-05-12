@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A-Wing Visuals — Your Video Roadmap</title>
+<link rel="icon" type="image/png" href="./awing-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #EB0020;
+  --red-glow: rgba(235, 0, 32, 0.6);
+  --red-dim: rgba(235, 0, 32, 0.15);
+  --bg-deep: #121722;
+  --bg-card: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(255, 255, 255, 0.18);
+  --text-primary: #f0f0f0;
+  --text-secondary: rgba(255, 255, 255, 0.78);
+  --text-dim: rgba(255, 255, 255, 0.58);
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Rajdhani', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  overflow: auto;
+}
+
+/* === BACKGROUND GRID + PARTICLES === */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(235, 0, 32, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 100%, rgba(235, 0, 32, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, #141a27 0%, #1a2233 50%, #121722 100%);
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+  z-index: 0;
+  animation: gridPulse 8s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* === LAYOUT === */
+.page {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5vh 4vw;
+}
+
+/* === HEADER === */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2vh;
+  animation: fadeSlideDown 0.8s ease-out both;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-img {
+  height: 58px;
+  width: auto;
+  filter: drop-shadow(0 0 8px rgba(235, 0, 32, 0.3));
+}
+
+.logo-slogan {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--red);
+  border-left: 1px solid rgba(235, 0, 32, 0.3);
+  padding-left: 20px;
+}
+
+.header-right {
+  text-align: right;
+}
+
+.header-tag {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 4px;
+}
+
+.header-client {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+}
+
+/* === TITLE === */
+.title-section {
+  text-align: center;
+  margin-bottom: 3vh;
+  animation: fadeSlideDown 0.8s ease-out 0.2s both;
+}
+
+.title-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 6px;
+}
+
+.title-main {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* === TIMELINE === */
+.timeline {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  gap: 0.5vw;
+  position: relative;
+  margin: 0 1vw;
+}
+
+/* Connecting line behind cards */
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--red-dim) 5%, 
+    var(--red) 15%,
+    var(--red) 85%,
+    var(--red-dim) 95%,
+    transparent 100%
+  );
+  transform: translateY(-50%);
+  z-index: 0;
+  animation: lineGlow 3s ease-in-out infinite;
+}
+
+@keyframes lineGlow {
+  0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 4px var(--red-glow)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 10px var(--red-glow)); }
+}
+
+.step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 0.6vw;
+}
+
+.step:nth-child(odd) .step-inner { flex-direction: column; }
+.step:nth-child(even) .step-inner { flex-direction: column-reverse; }
+
+.step-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+  gap: 1.2vh;
+}
+
+/* Node dot */
+.node {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--red);
+  background: var(--bg-deep);
+  position: relative;
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.node::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: nodePulse 2.5s ease-in-out infinite;
+}
+
+.step:nth-child(1) .node::after { animation-delay: 0s; }
+.step:nth-child(2) .node::after { animation-delay: 0.2s; }
+.step:nth-child(3) .node::after { animation-delay: 0.4s; }
+.step:nth-child(4) .node::after { animation-delay: 0.6s; }
+.step:nth-child(5) .node::after { animation-delay: 0.8s; }
+.step:nth-child(6) .node::after { animation-delay: 1.0s; }
+.step:nth-child(7) .node::after { animation-delay: 1.2s; }
+
+@keyframes nodePulse {
+  0%, 100% { opacity: 0.5; box-shadow: 0 0 6px var(--red-glow); }
+  50% { opacity: 1; box-shadow: 0 0 14px var(--red-glow); }
+}
+
+/* Card */
+.card {
+  background: rgba(16, 21, 33, 0.92);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  padding: 1.6vh 1.1vw;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  width: 100%;
+  max-width: 240px;
+  min-height: 210px;
+  text-align: center;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(235,0,32,0.3), transparent);
+}
+
+.card:hover {
+  border-color: rgba(235, 0, 32, 0.3);
+  box-shadow: 0 0 30px rgba(235, 0, 32, 0.1);
+  transform: translateY(-2px);
+}
+
+.step-number {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 3px;
+  margin-bottom: 0.4vh;
+}
+
+.step-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 0.6vh;
+  opacity: 0.9;
+}
+
+.step-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: var(--red);
+  fill: none;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px var(--red-glow));
+}
+
+.step-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-bottom: 0.4vh;
+  line-height: 1.35;
+}
+
+.step-desc {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+}
+
+.step-time {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.58rem;
+  color: var(--red);
+  letter-spacing: 2px;
+  margin-top: 0.4vh;
+  opacity: 0.7;
+}
+
+/* Stagger animations */
+.step { animation: stepReveal 0.6s ease-out both; }
+.step:nth-child(1) { animation-delay: 0.4s; }
+.step:nth-child(2) { animation-delay: 0.55s; }
+.step:nth-child(3) { animation-delay: 0.7s; }
+.step:nth-child(4) { animation-delay: 0.85s; }
+.step:nth-child(5) { animation-delay: 1.0s; }
+.step:nth-child(6) { animation-delay: 1.15s; }
+.step:nth-child(7) { animation-delay: 1.3s; }
+
+@keyframes stepReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Current step highlight */
+.step.current .card {
+  border-color: rgba(235, 0, 32, 0.4);
+  box-shadow: 0 0 40px rgba(235, 0, 32, 0.15), inset 0 0 30px rgba(235, 0, 32, 0.03);
+}
+
+.step.current .node {
+  width: 22px;
+  height: 22px;
+  box-shadow: 0 0 20px var(--red-glow);
+}
+
+.step.current .card::after {
+  content: 'YOU ARE HERE';
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.4rem;
+  letter-spacing: 3px;
+  color: var(--red);
+  white-space: nowrap;
+  animation: youAreHere 2s ease-in-out infinite;
+}
+
+@keyframes youAreHere {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* === FOOTER === */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4vw;
+  margin-top: 3vh;
+  padding-top: 2vh;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  animation: fadeSlideDown 0.8s ease-out 1.6s both;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  letter-spacing: 2px;
+}
+
+.stat-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.footer-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255,255,255,0.08);
+}
+
+.brand-logos {
+  display: flex;
+  align-items: center;
+  gap: 2.5vw;
+}
+
+.brand-logo {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  transition: color 0.3s;
+}
+
+.brand-logo:hover { color: var(--text-secondary); }
+
+/* === ANIMATIONS === */
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === THINGS WE'VE SEEN === */
+.insights {
+  margin-top: 3vh;
+  animation: fadeSlideDown 0.8s ease-out 1.4s both;
+}
+
+.insights-label {
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.5rem;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.5vh;
+}
+
+.insights-row {
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+}
+
+.insight-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 10px;
+  padding: 1.5vh 1.5vw;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  text-align: center;
+  flex: 1;
+  max-width: 260px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  opacity: 0.5;
+}
+
+.insight-card:hover {
+  border-color: rgba(235, 0, 32, 0.3);
+  box-shadow: 0 0 30px rgba(235, 0, 32, 0.1);
+  transform: translateY(-2px);
+}
+
+.insight-value {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  color: var(--red);
+  letter-spacing: 2px;
+  line-height: 1;
+  margin-bottom: 0.6vh;
+  text-shadow: 0 0 20px var(--red-glow);
+}
+
+.insight-desc {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 1400px) {
+  .page {
+    height: auto;
+    min-height: 100vh;
+    padding: 3vh 3vw;
+  }
+
+  .timeline {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2vh 1vw;
+    margin: 0;
+  }
+
+  .timeline::before {
+    display: none;
+  }
+
+  .step {
+    flex: 0 1 260px;
+  }
+
+  .step:nth-child(even) .step-inner {
+    flex-direction: column;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+    gap: 2vh 2vw;
+  }
+
+  .footer-divider {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo-area">
+      <img src="./awing-logo.png" alt="A-Wing Visuals" class="logo-img">
+      <div class="logo-slogan">Production that Performs</div>
+    </div>
+    <div class="header-right">
+      <div class="header-tag">Prepared For</div>
+      <div class="header-client">Your Brand</div>
+    </div>
+  </header>
+
+  <!-- TITLE -->
+  <div class="title-section">
+    <div class="title-label">Production Sequence Initiated</div>
+    <h1 class="title-main">Your Video Roadmap</h1>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+
+    <!-- Step 1 — CURRENT -->
+    <div class="step current">
+      <div class="step-inner">
+        <div class="card">
+          <div class="step-number">01</div>
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="step-title">Intro Call</div>
+          <div class="step-desc">Your Marketing Consultant gathers your goals, brand details, and creative vision to brief the production team.</div>
+          <div class="step-time">Today</div>
+        </div>
+        <div class="node"></div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-inner">
+        <div class="card">
+          <div class="step-number">02</div>
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg>
+          </div>
+          <div class="step-title">Strategy Build</div>
+          <div class="step-desc">Your Producer deconstructs your brief and builds a full creative strategy and draft storyboards tailored to your goals.</div>
+          <div class="step-time">48 Hours</div>
+        </div>
+        <div class="node"></div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <div class="step-inner">
+        <div class="card">
+          <div class="step-number">03</div>
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+          </div>
+          <div class="step-title">Strategy Call / Presentation</div>
+          <div class="step-desc">We present your strategy and lock in shoot dates and your final package. You decide—nothing moves without your approval.</div>
+        </div>
+        <div class="node"></div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <div class="step-inner">
+        <div class="card">
+          <div class="step-number">04</div>
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="step-title">Storyboard Call</div>
+          <div class="step-desc">Direct working session with your Producer and project manager to finalize every scene, shot, and sequence.</div>
+        </div>
+        <div class="node"></div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <div class="step-inner">
+        <div class="card">
+          <div class="step-number">05</div>
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <div class="step-title">Shoot Day</div>
+          <div class="step-desc">Half or full-day filming with a complete A-Wing production crew. Every shot planned. Every detail handled.</div>
+        </div>
+        <div class="node"></div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step">
+      <div class="step-inner">
+        <div class="card">
+          <div class="step-number">06</div>
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20"/><path d="M17 2v20"/><path d="M2 12h20"/><path d="M2 7h5"/><path d="M2 17h5"/><path d="M17 7h5"/><path d="M17 17h5"/></svg>
+          </div>
+          <div class="step-title">Editing</div>
+          <div class="step-desc">Full post-production by our in-house editing team: color grade, audio mix, motion graphics, and platform formatting.</div>
+          <div class="step-time">10 Days</div>
+        </div>
+        <div class="node"></div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step">
+      <div class="step-inner">
+        <div class="card">
+          <div class="step-number">07</div>
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="step-title">Revisions</div>
+          <div class="step-desc">3 complimentary revision rounds per video until it's exactly right—then it's yours, ready to run.</div>
+          <div class="step-time">Launch Ready</div>
+        </div>
+        <div class="node"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- THINGS WE'VE SEEN -->
+  <div class="insights">
+    <div class="insights-label">What The Data Shows</div>
+    <div class="insights-row">
+      <div class="insight-card">
+        <div class="insight-value">15–25%</div>
+        <div class="insight-desc">Average ROAS increase after launching A-Wing creatives</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-value">86%</div>
+        <div class="insight-desc">Higher conversion rates on landing pages with professional video</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-value">49%</div>
+        <div class="insight-desc">Faster revenue growth for companies using video marketing vs. those without</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="stat">
+      <div class="stat-value">1,500+</div>
+      <div class="stat-label">Videos Produced</div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="stat">
+      <div class="stat-value">10+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="stat">
+      <div class="stat-value">200+</div>
+      <div class="stat-label">5-Star Reviews</div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="brand-logos">
+      <span class="brand-logo">ESPN</span>
+      <span class="brand-logo">Mazda</span>
+      <span class="brand-logo">Celsius</span>
+      <span class="brand-logo">Pfizer</span>
+      <span class="brand-logo">IBM</span>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
